@@ -110,7 +110,7 @@ async def videoConverter(file: str):
 
 async def sizeChecker(file_path, remove: bool):
     global Paths
-    max_size = 2097152000  # 2 GB
+    max_size = 41943040  # 2 GB
     file_size = os.stat(file_path).st_size
 
     if file_size > max_size:
