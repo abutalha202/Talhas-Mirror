@@ -1,4 +1,4 @@
-![copyright 2023 © Xron Trix | https://github.com/Xrontrix10](https://gist.github.com/assets/164003859/a39e5b9e-118c-482f-ac75-e5527f543282)
+![](https://gist.github.com/assets/164003859/a39e5b9e-118c-482f-ac75-e5527f543282)
 
 <br>
 
@@ -13,7 +13,7 @@
 
 ## 🎓 **How To Deploy**
 
-@Thanks Xron Trix | https://github.com/Xrontrix10
+@Thanks to Xron Trix | https://github.com/Xrontrix10
 
 <h3>Read <a href="">INSTRUCTIONS</a></h3>
 
