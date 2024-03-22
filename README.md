@@ -6,14 +6,18 @@
 
 <br>
 
+## **copyright ©**
+Xron Trix | https://github.com/Xrontrix10
+
 ## **📖 Click To Open The Notebook**
 
 <a href="" target="_parent"><img src="https://gist.github.com/assets/164003859/a39e5b9e-118c-482f-ac75-e5527f543282" alt="Open In Colab" width=200px/></a>
 
+## **@Thanks to**
+Xron Trix | https://github.com/Xrontrix10
+
 
 ## 🎓 **How To Deploy**
-
-@Thanks to Xron Trix | https://github.com/Xrontrix10
 
 <h3>Read <a href="">INSTRUCTIONS</a></h3>
 
