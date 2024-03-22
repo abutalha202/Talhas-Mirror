@@ -43,7 +43,7 @@ async def colabxr(client, message):
         src_request_msg = await message.reply_text(text)
     else:
         msg = await message.reply_text(
-            "Talha's Bot Already Working 🙂! Please Wait Until finish 🏁!!"
+            "Talha's Bot Already Doing A Task 🙂! Please Wait Until finish 🏁!!"
         )
         await sleep(15)
         await msg.delete()
@@ -162,7 +162,7 @@ async def handle_url(client, message):
     elif BOT.State.started:
         await message.delete()
         await message.reply_text(
-            "<i>Talha's Bot Already Working ! Please Wait Until finish 😣!!</i>"
+            "<i>Talha's Bot Already Doing A Task! Please Wait Until finish 😣!!</i>"
         )
 
 
