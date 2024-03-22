@@ -13,6 +13,8 @@
 
 ## 🎓 **How To Deploy**
 
+Thanks to Talha
+
 <h3>Read <a href="">INSTRUCTIONS</a></h3>
 
 <br>
