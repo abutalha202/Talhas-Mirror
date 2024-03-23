@@ -21,7 +21,7 @@ async def start(client, message):
         [
             [
                 InlineKeyboardButton(
-                    "Repository 🦄", url="https://github.com/abutalha202/Telegram-Leecher"
+                    "Repository 🦄", url="https://github.com/abutalha202"
                 ),
                 InlineKeyboardButton("Support 💝", url="https://t.me/talhasmovie_request_bot"),
             ],
@@ -428,17 +428,17 @@ async def help_command(client, message):
                 [
                     InlineKeyboardButton(
                         "Talha's Bot",
-                        url="https://t.me/leech121bot",
+                        url=https://t.me/talhasmovie_request_bot"",
                     ),
                 ],
                 [
                     InlineKeyboardButton(  # Opens a web URL
                         "Channel 📣",
-                        url="https://t.me/leech121bot",
+                        url="https://t.me/talhasmovie_request_bot",
                     ),
                     InlineKeyboardButton(  # Opens a web URL
                         "Group 💬",
-                        url="https://t.me/+IlgnSHUFTJk4M2Rl",
+                        url="https://t.me/talhasmovie_request_bot",
                     ),
                 ],
             ]
@@ -448,5 +448,5 @@ async def help_command(client, message):
     await message_deleter(message, msg)
 
 
-logging.info("Talha's Mirror Leecher Started !")
+logging.info("Talha's Mirror Leecher Bot Started !")
 colab_bot.run()
