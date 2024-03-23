@@ -1,6 +1,3 @@
-# copyright 2023 © Xron Trix | https://github.com/abutalha202
-
-
 # @title 🖥️ Main Talha's Mirror Leech Code
 
 # @title Main Code
