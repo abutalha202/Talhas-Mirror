@@ -428,7 +428,7 @@ async def help_command(client, message):
                 [
                     InlineKeyboardButton(
                         "Talha's Bot",
-                        url=https://t.me/talhasmovie_request_bot"",
+                        url="https://t.me/talhasmovie_request_bot"",
                     ),
                 ],
                 [
