@@ -1,1 +1,1 @@
-# copyright 2023 © Xron Trix | https://github.com/Xrontrix10
+# Talhas-Mirror !! | https://github.com/abutalha202
