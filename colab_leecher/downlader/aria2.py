@@ -1,6 +1,3 @@
-# copyright 2023 © Xron Trix | https://github.com/Xrontrix10
-
-
 import re
 import logging
 import subprocess
