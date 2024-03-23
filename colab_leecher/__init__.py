@@ -1,5 +1,3 @@
-# copyright 2023 © Xron Trix | https://github.com/Xrontrix10
-
 import logging, json
 from uvloop import install
 from pyrogram.client import Client
