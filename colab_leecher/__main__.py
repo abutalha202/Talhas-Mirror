@@ -1,6 +1,3 @@
-# copyright 2023 © Xron Trix | https://github.com/Xrontrix10
-
-
 import logging, os
 from pyrogram import filters
 from datetime import datetime
@@ -431,7 +428,7 @@ async def help_command(client, message):
                 [
                     InlineKeyboardButton(
                         "Talha's Bot",
-                        url="https://github.com",
+                        url="https://t.me/leech121bot",
                     ),
                 ],
                 [
