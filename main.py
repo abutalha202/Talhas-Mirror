@@ -51,11 +51,11 @@ if len(str(DUMP_ID)) == 10 and "-100" not in str(DUMP_ID):
 if os.path.exists("/content/sample_data"):
     shutil.rmtree("/content/sample_data")
 
-cmd = "git clone https://github.com/abutalha202/Talhas-Mirror && bash /content/Talhas-Mirror/setup.sh"
+cmd = "git clone https://github.com/abutalha202/Talhas-Mirror && bash //content/Talhas-MIRROR/setup.sh"
 proc = subprocess.run(cmd, shell=True)
 cmd = "apt update && apt install ffmpeg aria2"
 proc = subprocess.run(cmd, shell=True)
-cmd = "pip3 install -r /content/Talhas-Mirror/requirements.txt"
+cmd = "pip3 install -r /content/Talhas-MIRROR/requirements.txt"
 proc = subprocess.run(cmd, shell=True)
 
 credentials = {
@@ -66,13 +66,13 @@ credentials = {
     "DUMP_ID": DUMP_ID,
 }
 
-with open('/content/Talhas-Mirror/credentials.json', 'w') as file:
+with open('/content/Talhas-MIRROR/credentials.json', 'w') as file:
     file.write(json.dumps(credentials))
 
 Working = False
 
-if os.path.exists("/content/Talhas-Mirror/my_bot.session"):
-    os.remove("/content/Talhas-Mirror/my_bot.session") # Remove previous bot session
+if os.path.exists("/content/Talhas-MIRROR/my_bot.session"):
+    os.remove("/content/Talhas-MIRROR/my_bot.session") # Remove previous bot session
     
 print("\rStarting Bot....")
 
