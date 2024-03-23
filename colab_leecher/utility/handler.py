@@ -1,6 +1,3 @@
-# copyright 2023 © Xron Trix | https://github.com/Xrontrix10
-
-
 import os
 import shutil
 import logging
@@ -230,7 +227,7 @@ async def cancelTask(Reason: str):
 async def SendLogs(is_leech: bool):
     global Transfer, Messages
     final_text = f"<b>☘️ File Count:</b>  <code>{len(Transfer.sent_file)}</code>\n\n<b>📜 Logs:</b>\n"
-    l_ink = "⌬─────[「 Talha's bot 」](https://t.me/leech121bot)─────⌬"
+    l_ink = "⌬─────[「 Talha's bot 」](https://t.me/talhasmovie_request_bot)─────⌬"
 
     if is_leech:
         file_count = (
@@ -264,7 +261,7 @@ async def SendLogs(is_leech: bool):
                     [
                         InlineKeyboardButton(
                             "Git Repo 🪲",
-                            url="https://github.com/abutalha202/Telegram-Leecher",
+                            url="https://github.com/abutalha202",
                         ),
                     ],
                     [
