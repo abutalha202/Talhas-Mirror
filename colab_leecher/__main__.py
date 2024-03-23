@@ -428,13 +428,13 @@ async def help_command(client, message):
                 [
                     InlineKeyboardButton(
                         "Talha's Bot",
-                        url="https://t.me/+IlgnSHUFTJk4M2Rl"",
+                        url="https://github.com"",
                     ),
                 ],
                 [
                     InlineKeyboardButton(  # Opens a web URL
                         "Channel 📣",
-                        url="https://t.me/talhasmovie_request_bot",
+                        url="https://t.me/+IlgnSHUFTJk4M2Rl",
                     ),
                     InlineKeyboardButton(  # Opens a web URL
                         "Group 💬",
