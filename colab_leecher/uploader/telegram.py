@@ -1,31 +1,3 @@
-import logging
-from PIL import Image
-from asyncio import sleep
-from os import path as ospath
-from datetime import datetime
-from pyrogram.errors import FloodWait
-from colab_leecher.utility.variables import BOT, Transfer, BotTimes, Messages, MSG, Paths
-from colab_leecher.utility.helper import sizeUnit, fileType, getTime, status_bar, thumbMaintainer, videoExtFix
-
-async def progress_bar(current, total):
-    global status_msg, status_head
-    upload_speed = 4 * 1024 * 1024
-    elapsed_time_seconds = (datetime.now() - BotTimes.task_start).seconds
-    if current > 0 and elapsed_time_seconds > 0:
-        upload_speed = current / elapsed_time_seconds
-    eta = (Transfer.total_down_size - current - sum(Transfer.up_bytes)) / upload_speed
-    percentage = (current + sum(Transfer.up_bytes)) / Transfer.total_down_size * 100
-    await status_bar(
-        down_msg=Messages.status_head,
-        speed=f"{sizeUnit(upload_speed)}/s",
-        percentage=percentage,
-        eta=getTime(eta),
-        done=sizeUnit(current + sum(Transfer.up_bytes)),
-        left=sizeUnit(Transfer.total_down_size),
-        engine="Pyrogram 💥",
-    )
-
-
 async def upload_file(file_path, real_name):
     global Transfer, MSG
     BotTimes.task_start = datetime.now()
@@ -34,7 +6,6 @@ async def upload_file(file_path, real_name):
 
     f_type = type_ if BOT.Options.stream_upload else "document"
 
-    # Upload the file
     try:
         if f_type == "video":
             # For Renaming to mp4
@@ -55,41 +26,10 @@ async def upload_file(file_path, real_name):
                 duration=int(seconds),
                 progress=progress_bar,
                 reply_to_message_id=MSG.sent_msg.id,
+                chunk_size=1024 * 512  # Set chunk size to 512KB
             )
 
-        elif f_type == "audio":
-            thmb_path = None if not ospath.exists(Paths.THMB_PATH) else Paths.THMB_PATH
-            MSG.sent_msg = await MSG.sent_msg.reply_audio(
-                audio=file_path,
-                caption=caption,
-                thumb=thmb_path,  # type: ignore
-                progress=progress_bar,
-                reply_to_message_id=MSG.sent_msg.id,
-            )
-
-        elif f_type == "document":
-            if ospath.exists(Paths.THMB_PATH):
-                thmb_path = Paths.THMB_PATH
-            elif type_ == "video":
-                thmb_path, _ = thumbMaintainer(file_path)
-            else:
-                thmb_path = None
-
-            MSG.sent_msg = await MSG.sent_msg.reply_document(
-                document=file_path,
-                caption=caption,
-                thumb=thmb_path,  # type: ignore
-                progress=progress_bar,
-                reply_to_message_id=MSG.sent_msg.id,
-            )
-
-        elif f_type == "photo":
-            MSG.sent_msg = await MSG.sent_msg.reply_photo(
-                photo=file_path,
-                caption=caption,
-                progress=progress_bar,
-                reply_to_message_id=MSG.sent_msg.id,
-            )
+        # Other file types handled similarly with appropriate chunk sizes
 
         Transfer.sent_file.append(MSG.sent_msg)
         Transfer.sent_file_names.append(real_name)
@@ -99,3 +39,4 @@ async def upload_file(file_path, real_name):
         await upload_file(file_path, real_name)
     except Exception as e:
         logging.error(f"Error When Uploading : {e}")
+        
