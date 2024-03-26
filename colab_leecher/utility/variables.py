@@ -66,15 +66,15 @@ class BotTimes:
 
 
 class Paths:
-    WORK_PATH = "/content/Talhas-MIRROR/BOT_WORK"
-    THMB_PATH = "/content/Talhas-MIRROR/colab_leecher/Thumbnail.jpg"
+    WORK_PATH = "/content/Talhas-Mirror/BOT_WORK"
+    THMB_PATH = "/content/Talhas-Mirror/colab_leecher/Thumbnail.jpg"
     VIDEO_FRAME = f"{WORK_PATH}/video_frame.jpg"
     HERO_IMAGE = f"{WORK_PATH}/Hero.jpg"
-    DEFAULT_HERO =  "/content/Talhas-MIRROR/custom_thmb.jpg"
+    DEFAULT_HERO =  "/content/Talhas-Mirror/custom_thmb.jpg"
     MOUNTED_DRIVE = "/content/drive"
     down_path = f"{WORK_PATH}/Downloads"
     temp_dirleech_path = f"{WORK_PATH}/dir_leech_temp"
-    mirror_dir = "//content/drive/MyDrive/Colab Leecher Uploads"
+    mirror_dir = "/content/drive/Shareddrives/AbuTalha's Drive 👑/MIRROR"
     temp_zpath = f"{WORK_PATH}/Leeched_Files"
     temp_unzip_path = f"{WORK_PATH}/Unzipped_Files"
     temp_files_dir = f"{WORK_PATH}/leech_temp"
