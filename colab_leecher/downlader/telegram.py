@@ -36,6 +36,7 @@ async def media_Identifier(link):
 
 
 async def download_progress(current, total):
+    global start_time
     speed_string, eta, percentage = speedETA(start_time, current, total)
 
     await status_bar(
@@ -43,14 +44,14 @@ async def download_progress(current, total):
         speed=speed_string,
         percentage=percentage,
         eta=getTime(eta),
-        done=sizeUnit(sum(Transfer.down_bytes) + current),
-        left=sizeUnit(Transfer.total_down_size),
+        done=sizeUnit(current),
+        left=sizeUnit(total - current),
         engine="Pyrogram 💥",
     )
 
 
 async def TelegramDownload(link, num):
-    global start_time, TRANSFER_INFO
+    global start_time
     media, message = await media_Identifier(link) # type: ignore
     if media is not None:
         name = media.file_name if hasattr(  # type: ignore
@@ -66,3 +67,4 @@ async def TelegramDownload(link, num):
     
     await message.download(progress=download_progress, in_memory=False, file_name=file_path) # type: ignore
     Transfer.down_bytes.append(media.file_size)
+    
