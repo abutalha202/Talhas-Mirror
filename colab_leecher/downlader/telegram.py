@@ -78,6 +78,6 @@ async def download_multiple(links):
     await asyncio.gather(*tasks)
 
 
-async def TelegramDownload(links):
+async def TelegramDownload(*links):
     await download_multiple(links)
     
