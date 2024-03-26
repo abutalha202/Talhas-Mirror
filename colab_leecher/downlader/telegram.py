@@ -5,7 +5,6 @@ from colab_leecher import colab_bot
 from colab_leecher.utility.handler import cancelTask
 from colab_leecher.utility.variables import Transfer, Paths, Messages, BotTimes
 from colab_leecher.utility.helper import speedETA, getTime, sizeUnit, status_bar
-import asyncio
 
 
 async def media_Identifier(link):
@@ -51,7 +50,7 @@ async def download_progress(current, total):
     )
 
 
-async def download_single(link, num):
+async def TelegramDownload(link, num):
     global start_time
     media, message = await media_Identifier(link) # type: ignore
     if media is not None:
@@ -68,16 +67,4 @@ async def download_single(link, num):
     
     await message.download(progress=download_progress, in_memory=False, file_name=file_path) # type: ignore
     Transfer.down_bytes.append(media.file_size)
-
-
-async def download_multiple(links):
-    tasks = []
-    for i, link in enumerate(links, start=1):
-        task = asyncio.create_task(download_single(link, i))
-        tasks.append(task)
-    await asyncio.gather(*tasks)
-
-
-async def TelegramDownload(*links):
-    await download_multiple(links)
     
