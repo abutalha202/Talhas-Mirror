@@ -95,7 +95,7 @@ async def upload_file(file_path, real_name):
         Transfer.sent_file_names.append(real_name)
 
     except FloodWait as e:
-        await sleep(2)  # Wait 2 seconds before Trying Again
+        await sleep(10)  # Wait 10 seconds before Trying Again
         await upload_file(file_path, real_name)
     except Exception as e:
         logging.error(f"Error When Uploading : {e}")
