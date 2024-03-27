@@ -1,6 +1,8 @@
 import logging
+import asyncio
 from datetime import datetime
 from os import path as ospath
+import aiohttp
 from colab_leecher import colab_bot
 from colab_leecher.utility.handler import cancelTask
 from colab_leecher.utility.variables import Transfer, Paths, Messages, BotTimes
@@ -33,6 +35,29 @@ async def media_Identifier(link):
         return
     return media, message
 
+async def download_chunk(session, url, start, end):
+    headers = {'Range': f'bytes={start}-{end}'}
+    async with session.get(url, headers=headers) as response:
+        chunk = await response.read()
+        return chunk
+
+async def download_file(url, file_path):
+    async with aiohttp.ClientSession() as session:
+        async with session.head(url) as response:
+            total_size = int(response.headers['Content-Length'])
+        
+        chunk_size = 1024 * 1024  # 1 MB chunks
+        tasks = []
+        with open(file_path, 'wb') as file:
+            for start in range(0, total_size, chunk_size):
+                end = min(start + chunk_size - 1, total_size - 1)
+                task = asyncio.create_task(download_chunk(session, url, start, end))
+                tasks.append(task)
+            chunks = await asyncio.gather(*tasks)
+            for chunk in chunks:
+                file.write(chunk)
+                Transfer.down_bytes.append(len(chunk))
+
 async def download_progress(current, total):
     speed_string, eta, percentage = speedETA(start_time, current, total)
 
@@ -47,7 +72,7 @@ async def download_progress(current, total):
     )
 
 async def TelegramDownload(link, num):
-    global start_time, TRANSFER_INFO
+    global start_time
     media, message = await media_Identifier(link) # type: ignore
     if media is not None:
         name = media.file_name if hasattr(  # type: ignore
@@ -61,7 +86,6 @@ async def TelegramDownload(link, num):
     start_time = datetime.now()
     file_path = ospath.join(Paths.down_path, name)
     
-    await message.download(progress=download_progress, in_memory=False, file_name=file_path) # type: ignore
-    Transfer.down_bytes.append(media.file_size)
+    await download_file(link, file_path)
 
 # Start your script here
