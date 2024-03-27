@@ -46,7 +46,7 @@ async def download_file(url, file_path):
         async with session.head(url) as response:
             total_size = int(response.headers['Content-Length'])
         
-        chunk_size = 1024 * 1024  # 1 MB chunks
+        chunk_size = 4000 * 4000  # 1 MB chunks
         tasks = []
         with open(file_path, 'wb') as file:
             for start in range(0, total_size, chunk_size):
