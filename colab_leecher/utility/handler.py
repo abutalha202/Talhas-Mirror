@@ -300,7 +300,7 @@ async def SendLogs(is_leech: bool):
                     MSG.status_msg = await MSG.status_msg.reply_text(text=fn_txt)
             except Exception as e:
                 Err = f"<b>Error Sending logs » </b><i>{e}</i>"
-                Err += f"\n\n<i>⚠️ If You are Unknown with this **ERROR**, Then Forward This Message in [Talha's Support Bot](https://t.me/talhasmovie_request_bot)
+                Err += f"\n\n<i>⚠️ If You are Unknown with this **ERROR**, Then Forward This Message in [Talha's Support Bot](https://t.me/talhasmovie_request_bot) Where [Talha](https://t.me/talhasmovie_request_bot) may fix it</i>"
                 await MSG.status_msg.reply_text(text=Err)
 
     BOT.State.started = False
