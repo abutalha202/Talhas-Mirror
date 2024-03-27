@@ -82,7 +82,7 @@ async def taskScheduler():
                 Messages.dump_task += code_link
                 
     # Get the current date and time in the specified time zone
-    cdt = datetime.now(pytz.timezone("Asia/Kolkata"))
+    cdt = datetime.now(pytz.timezone("Asia/Dhaka"))
     dt = cdt.strftime(" %d-%m-%Y")
     Messages.dump_task += f"\n\n<b>📆 Task Date » </b><i>{dt}</i>"
 
