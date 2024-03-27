@@ -33,14 +33,6 @@ async def media_Identifier(link):
         return
     return media, message
 
-async def download_chunk(url, file_path, start_byte, end_byte):
-    headers = {'Range': f'bytes={start_byte}-{end_byte}'}
-    response = await colab_bot.http.get(url, headers=headers)
-    chunk = await response.read()
-    with open(file_path, 'ab') as file:
-        file.write(chunk)
-        Transfer.down_bytes.append(len(chunk))
-
 async def download_progress(current, total):
     speed_string, eta, percentage = speedETA(start_time, current, total)
 
@@ -68,12 +60,13 @@ async def TelegramDownload(link, num):
     start_time = datetime.now()
     file_path = ospath.join(Paths.down_path, name)
     
-    chunk_size = 1024 * 1024  # 1 MB chunk size
-    file_size = media.file_size
-    for start_byte in range(0, file_size, chunk_size):
-        end_byte = min(start_byte + chunk_size - 1, file_size - 1)
-        await download_chunk(message.link, file_path, start_byte, end_byte)
+    try:
+        await colab_bot.download_media(message, file_path, progress=download_progress)
+    except Exception as e:
+        logging.error(f"Error downloading media: {e}")
+        await cancelTask("Error downloading media")
 
     Transfer.down_bytes.append(media.file_size)
 
 # Start your script here
+                                             
