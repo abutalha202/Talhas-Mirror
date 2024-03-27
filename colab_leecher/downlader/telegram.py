@@ -50,7 +50,7 @@ async def download_file(url, file_path):
         tasks = []
         with open(file_path, 'wb') as file:
             for start in range(0, total_size, chunk_size):
-                end = min(start + chunk_size - 1, total_size - 1)
+                end = min(start + chunk_size - 4000, total_size - 4000)
                 task = asyncio.create_task(download_chunk(session, url, start, end))
                 tasks.append(task)
             chunks = await asyncio.gather(*tasks)
