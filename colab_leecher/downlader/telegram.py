@@ -3,8 +3,9 @@ from datetime import datetime
 from os import path as ospath
 from colab_leecher import colab_bot
 from colab_leecher.utility.handler import cancelTask
-from colab_leecher.utility.variables import Transfer, Paths, Messages
+from colab_leecher.utility.variables import Transfer, Paths, Messages, BotTimes
 from colab_leecher.utility.helper import speedETA, getTime, sizeUnit, status_bar
+
 
 async def media_Identifier(link):
     parts = link.split("/")
@@ -17,14 +18,14 @@ async def media_Identifier(link):
         logging.error(f"Error getting messages {e}")
 
     media = (
-        message.document
-        or message.photo
-        or message.video
-        or message.audio
-        or message.voice
-        or message.video_note
-        or message.sticker
-        or message.animation
+        message.document  # type: ignore
+        or message.photo  # type: ignore
+        or message.video  # type: ignore
+        or message.audio  # type: ignore
+        or message.voice  # type: ignore
+        or message.video_note  # type: ignore
+        or message.sticker  # type: ignore
+        or message.animation  # type: ignore
         or None
     )
     if media is None:
@@ -33,13 +34,6 @@ async def media_Identifier(link):
         return
     return media, message
 
-async def download_file(url, file_path):
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as response:
-            chunk = await response.read()
-            with open(file_path, 'wb') as file:
-                file.write(chunk)
-                Transfer.down_bytes.append(len(chunk))
 
 async def download_progress(current, total):
     speed_string, eta, percentage = speedETA(start_time, current, total)
@@ -54,11 +48,13 @@ async def download_progress(current, total):
         engine="Pyrogram 💥",
     )
 
+
 async def TelegramDownload(link, num):
-    global start_time
-    media, message = await media_Identifier(link)
+    global start_time, TRANSFER_INFO
+    media, message = await media_Identifier(link) # type: ignore
     if media is not None:
-        name = media.file_name if hasattr(media, "file_name") else "None"
+        name = media.file_name if hasattr(  # type: ignore
+            media, "file_name") else "None"
     else:
         logging.error("Couldn't Download Telegram Message")
         await cancelTask("Couldn't Download Telegram Message")
@@ -68,6 +64,5 @@ async def TelegramDownload(link, num):
     start_time = datetime.now()
     file_path = ospath.join(Paths.down_path, name)
     
-    await download_file(link, file_path)
-
-# Start your script here
+    await message.download(progress=download_progress, in_memory=False, file_name=file_path) # type: ignore
+    Transfer.down_bytes.append(media.file_size)
