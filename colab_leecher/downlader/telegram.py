@@ -1,3 +1,4 @@
+dia.file_size)
 import logging
 from datetime import datetime
 from os import path as ospath
@@ -5,7 +6,6 @@ from colab_leecher import colab_bot
 from colab_leecher.utility.handler import cancelTask
 from colab_leecher.utility.variables import Transfer, Paths, Messages, BotTimes
 from colab_leecher.utility.helper import speedETA, getTime, sizeUnit, status_bar
-
 
 async def media_Identifier(link):
     parts = link.split("/")
@@ -34,7 +34,6 @@ async def media_Identifier(link):
         return
     return media, message
 
-
 async def download_progress(current, total):
     speed_string, eta, percentage = speedETA(start_time, current, total)
 
@@ -47,7 +46,6 @@ async def download_progress(current, total):
         left=sizeUnit(Transfer.total_down_size),
         engine="Pyrogram 💥",
     )
-
 
 async def TelegramDownload(link, num):
     global start_time, TRANSFER_INFO
@@ -66,3 +64,5 @@ async def TelegramDownload(link, num):
     
     await message.download(progress=download_progress, in_memory=False, file_name=file_path) # type: ignore
     Transfer.down_bytes.append(media.file_size)
+
+# Start your script here
