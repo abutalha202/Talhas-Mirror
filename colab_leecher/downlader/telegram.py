@@ -1,3 +1,4 @@
+dia.file_size)
 import logging
 from datetime import datetime
 from os import path as ospath
@@ -5,7 +6,6 @@ from colab_leecher import colab_bot
 from colab_leecher.utility.handler import cancelTask
 from colab_leecher.utility.variables import Transfer, Paths, Messages, BotTimes
 from colab_leecher.utility.helper import speedETA, getTime, sizeUnit, status_bar
-
 
 async def media_Identifier(link):
     parts = link.split("/")
@@ -34,6 +34,13 @@ async def media_Identifier(link):
         return
     return media, message
 
+async def download_chunk(url, file_path, start_byte, end_byte):
+    headers = {'Range': f'bytes={start_byte}-{end_byte}'}
+    response = await colab_bot.http.get(url, headers=headers)
+    chunk = await response.read()
+    with open(file_path, 'ab') as file:
+        file.write(chunk)
+        Transfer.down_bytes.append(len(chunk))
 
 async def download_progress(current, total):
     speed_string, eta, percentage = speedETA(start_time, current, total)
@@ -48,13 +55,11 @@ async def download_progress(current, total):
         engine="Pyrogram 💥",
     )
 
-
 async def TelegramDownload(link, num):
-    global start_time, TRANSFER_INFO
+    global start_time
     media, message = await media_Identifier(link) # type: ignore
     if media is not None:
-        name = media.file_name if hasattr(  # type: ignore
-            media, "file_name") else "None"
+        name = media.file_name if hasattr(media, "file_name") else "None"
     else:
         logging.error("Couldn't Download Telegram Message")
         await cancelTask("Couldn't Download Telegram Message")
@@ -64,5 +69,12 @@ async def TelegramDownload(link, num):
     start_time = datetime.now()
     file_path = ospath.join(Paths.down_path, name)
     
-    await message.download(progress=download_progress, in_memory=False, file_name=file_path) # type: ignore
+    chunk_size = 1024 * 1024  # 1 MB chunk size
+    file_size = media.file_size
+    for start_byte in range(0, file_size, chunk_size):
+        end_byte = min(start_byte + chunk_size - 1, file_size - 1)
+        await download_chunk(message.link, file_path, start_byte, end_byte)
+
     Transfer.down_bytes.append(media.file_size)
+
+# Start your script here
