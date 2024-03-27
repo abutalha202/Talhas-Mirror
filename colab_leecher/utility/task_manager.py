@@ -213,7 +213,7 @@ async def Do_Mirror(source, is_ytdl, is_zip, is_unzip, is_dualzip):
     applyCustomName()
 
     cdt = datetime.now()
-    cdt_ = cdt.strftime("%Y-%m-%d %H:%M:%S")
+    cdt_ = cdt.strftime("Talha's Mirror Bot~%Y-%m-%d %H:%M:%S")
     mirror_dir_ = ospath.join(Paths.mirror_dir, cdt_)
 
     if is_zip:
