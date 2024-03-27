@@ -1,4 +1,3 @@
-dia.file_size)
 import logging
 from datetime import datetime
 from os import path as ospath
