@@ -1,8 +1,6 @@
 import logging
 from datetime import datetime
 from os import path as ospath
-import aiohttp
-import asyncio
 from colab_leecher import colab_bot
 from colab_leecher.utility.handler import cancelTask
 from colab_leecher.utility.variables import Transfer, Paths, Messages
@@ -35,12 +33,13 @@ async def media_Identifier(link):
         return
     return media, message
 
-async def download_file(session, url, file_path):
-    async with session.get(url) as response:
-        chunk = await response.read()
-        with open(file_path, 'wb') as file:
-            file.write(chunk)
-            Transfer.down_bytes.append(len(chunk))
+async def download_file(url, file_path):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            chunk = await response.read()
+            with open(file_path, 'wb') as file:
+                file.write(chunk)
+                Transfer.down_bytes.append(len(chunk))
 
 async def download_progress(current, total):
     speed_string, eta, percentage = speedETA(start_time, current, total)
@@ -68,16 +67,7 @@ async def TelegramDownload(link, num):
     Messages.status_head = f"<b>📥 DOWNLOADING FROM » </b><i>🔗Link {str(num).zfill(2)}</i>\n\n<code>{name}</code>\n"
     start_time = datetime.now()
     file_path = ospath.join(Paths.down_path, name)
-
-    async with aiohttp.ClientSession() as session:
-        await download_file(session, link, file_path)
+    
+    await download_file(link, file_path)
 
 # Start your script here
-
-async def main():
-    tasks = []
-    for link in your_link_list:
-        tasks.append(asyncio.create_task(TelegramDownload(link, num)))
-    await asyncio.gather(*tasks)
-
-asyncio.run(main())
