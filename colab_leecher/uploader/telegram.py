@@ -9,7 +9,7 @@ from colab_leecher.utility.helper import sizeUnit, fileType, getTime, status_bar
 
 async def progress_bar(current, total):
     global status_msg, status_head
-    upload_speed = 10 * 1024 * 1024  # Initial upload speed estimate (10 MB/s)
+    upload_speed = 20 * 156250 * 156250  # Initial upload speed estimate (20 MB/s)
     elapsed_time_seconds = (datetime.now() - BotTimes.task_start).seconds
     if current > 0 and elapsed_time_seconds > 0:
         upload_speed = current / elapsed_time_seconds
