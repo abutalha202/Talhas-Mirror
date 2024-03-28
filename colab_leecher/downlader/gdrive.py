@@ -12,11 +12,19 @@ from colab_leecher.utility.handler import cancelTask
 from colab_leecher.utility.helper import sizeUnit, getTime, speedETA, status_bar
 from colab_leecher.utility.variables import Gdrive, Messages, Paths, BotTimes, Transfer
 
+
 async def build_service():
     global Gdrive
-    creds = None # Add your credentials here
-    # Build the service
-    Gdrive.service = build("drive", "v3", credentials=creds)
+    if ospath.exists(Paths.access_token):
+        with open(Paths.access_token, "rb") as token:
+            creds = pickle.load(token)
+            # Build the service
+            Gdrive.service = build("drive", "v3", credentials=creds)
+    else:
+        await cancelTask(
+            "token.pickle NOT FOUND ! Stop the Bot and Run the Google Drive Cell to Generate, then Try again !"
+        )
+
 
 async def g_DownLoad(link, num):
     global start_time, down_msg
@@ -28,6 +36,7 @@ async def g_DownLoad(link, num):
         await gDownloadFolder(file_id, Paths.down_path)
     else:
         await gDownloadFile(file_id, Paths.down_path)
+
 
 async def getIDFromURL(link: str):
     if "folders" in link or "file" in link:
@@ -41,6 +50,7 @@ async def getIDFromURL(link: str):
             return res.group(3)
     parsed = urlparse(link)
     return parse_qs(parsed.query)["id"][0]
+
 
 def getFilesByFolderID(folder_id):
     page_token = None
@@ -66,12 +76,14 @@ def getFilesByFolderID(folder_id):
             break
     return files
 
+
 def getFileMetadata(file_id):
     return (
         Gdrive.service.files()  # type: ignore
         .get(fileId=file_id, supportsAllDrives=True, fields="name, id, mimeType, size")
         .execute()
     )
+
 
 def get_Gfolder_size(folder_id):
     try:
@@ -111,6 +123,7 @@ def get_Gfolder_size(folder_id):
     except HttpError as error:
         logging.error(f"Error while checking size: {error}")
         return -1
+
 
 async def gDownloadFile(file_id, path):
     global TRANSFER_INFO
@@ -188,6 +201,7 @@ async def gDownloadFile(file_id, path):
                 await cancelTask("Error downloading: {0}".format(e))
                 return
 
+
 async def gDownloadFolder(folder_id, path):
     folder_meta = getFileMetadata(folder_id)
     folder_name = folder_meta["name"]
@@ -210,4 +224,3 @@ async def gDownloadFolder(folder_id, path):
             await gDownloadFolder(file_id, path)
         else:
             await gDownloadFile(file_id, path)
-        
