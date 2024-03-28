@@ -66,9 +66,6 @@ async def calDownSize(sources):
                 Transfer.total_down_size += size
 
 async def get_d_name(link: str):
-    if len(BOT.Options.custom_name) != 0:
-        Messages.download_name = BOT.Options.custom_name
-        return
     if "drive.google.com" in link:
         id = await getIDFromURL(link)
         meta = getFileMetadata(id)
@@ -82,4 +79,4 @@ async def get_d_name(link: str):
         Messages.download_name = "Don't Know 🥲 (Trying)"
     else:
         Messages.download_name = get_Aria2c_Name(link)
-                    
+            
