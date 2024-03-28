@@ -9,7 +9,7 @@ from colab_leecher.utility.helper import sizeUnit, fileType, getTime, status_bar
 
 async def progress_bar(current, total):
     global status_msg, status_head
-    upload_speed = 1000 * 1024 * 1024
+    upload_speed = 1000 * 1024 * 1024  # Increased upload speed chunk size
     elapsed_time_seconds = (datetime.now() - BotTimes.task_start).seconds
     if current > 0 and elapsed_time_seconds > 0:
         upload_speed = current / elapsed_time_seconds
@@ -99,3 +99,4 @@ async def upload_file(file_path, real_name):
         await upload_file(file_path, real_name)
     except Exception as e:
         logging.error(f"Error When Uploading : {e}")
+            
