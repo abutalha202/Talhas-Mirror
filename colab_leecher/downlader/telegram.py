@@ -50,7 +50,7 @@ async def download_progress(current, total):
 
 
 async def TelegramDownload(link, num):
-    global start_time, TRANSFER_INFO
+    global start_time
     media, message = await media_Identifier(link) # type: ignore
     if media is not None:
         name = media.file_name if hasattr(  # type: ignore
@@ -64,6 +64,6 @@ async def TelegramDownload(link, num):
     start_time = datetime.now()
     file_path = ospath.join(Paths.down_path, name)
     
-    await message.download(progress=download_progress, in_memory=False, file_name=file_path, chunk_size=1000) # type: ignore
+    await message.download(progress=download_progress, file_name=file_path) # type: ignore
     Transfer.down_bytes.append(media.file_size)
     
