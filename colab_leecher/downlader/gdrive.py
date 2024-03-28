@@ -141,7 +141,7 @@ async def gDownloadFile(file_id, path):
                 )
 
                 file_downloader = MediaIoBaseDownload(
-                    file_contents, request, chunksize= 1000 * 1024 * 1024
+                    file_contents, request, chunksize= 500 * 1024 * 1024
                 )
 
                 done = False
