@@ -1,95 +1,120 @@
-from aiofiles.os import remove, path as aiopath
-
-from bot import (
-    aria2,
-    task_dict_lock,
-    task_dict,
-    LOGGER,
-    config_dict,
-    aria2_options,
-    aria2c_global,
-    non_queued_dl,
-    queue_dict_lock,
-)
-from bot.helper.ext_utils.bot_utils import bt_selection_buttons, sync_to_async
-from bot.helper.ext_utils.task_manager import check_running_tasks
-from bot.helper.mirror_leech_utils.status_utils.aria2_status import Aria2Status
-from bot.helper.telegram_helper.message_utils import sendStatusMessage, sendMessage
+import re
+import logging
+import subprocess
+from datetime import datetime
+from colab_leecher.utility.helper import sizeUnit, status_bar
+from colab_leecher.utility.variables import BOT, Aria2c, Paths, Messages, BotTimes
 
 
-async def add_aria2c_download(listener, dpath, header, ratio, seed_time):
-    a2c_opt = {**aria2_options}
-    [a2c_opt.pop(k) for k in aria2c_global if k in aria2_options]
-    a2c_opt["dir"] = dpath
-    if listener.name:
-        a2c_opt["out"] = listener.name
-    if header:
-        a2c_opt["header"] = header
-    if ratio:
-        a2c_opt["seed-ratio"] = ratio
-    if seed_time:
-        a2c_opt["seed-time"] = seed_time
-    if TORRENT_TIMEOUT := config_dict["TORRENT_TIMEOUT"]:
-        a2c_opt["bt-stop-timeout"] = f"{TORRENT_TIMEOUT}"
+async def aria2_Download(link: str, num: int):
+    global BotTimes, Messages
+    name_d = get_Aria2c_Name(link)
+    BotTimes.task_start = datetime.now()
+    Messages.status_head = f"<b>📥 DOWNLOADING FROM » </b><i>🔗Link {str(num).zfill(2)}</i>\n\n<b>🏷️ Name » </b><code>{name_d}</code>\n"
 
-    add_to_queue, event = await check_running_tasks(listener)
-    if add_to_queue:
-        if listener.link.startswith("magnet:"):
-            a2c_opt["pause-metadata"] = "true"
+    # Create a command to run aria2p with the link
+    command = [
+        "aria2c",
+        "-x16",
+        "--seed-time=0",
+        "--summary-interval=1",
+        "--max-tries=3",
+        "--console-log-level=notice",
+        "-d",
+        Paths.down_path,
+        link,
+    ]
+
+    # Run the command using subprocess.Popen
+    proc = subprocess.Popen(
+        command, bufsize=0, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
+
+    # Read and print output in real-time
+    while True:
+        output = proc.stdout.readline()  # type: ignore
+        if output == b"" and proc.poll() is not None:
+            break
+        if output:
+            # sys.stdout.write(output.decode("utf-8"))
+            # sys.stdout.flush()
+            await on_output(output.decode("utf-8"))
+
+    # Retrieve exit code and any error output
+    exit_code = proc.wait()
+    error_output = proc.stderr.read()  # type: ignore
+    if exit_code != 0:
+        if exit_code == 3:
+            logging.error(f"The Resource was Not Found in {link}")
+        elif exit_code == 9:
+            logging.error(f"Not enough disk space available")
+        elif exit_code == 24:
+            logging.error(f"HTTP authorization failed.")
         else:
-            a2c_opt["pause"] = "true"
+            logging.error(
+                f"aria2c download failed with return code {exit_code} for {link}.\nError: {error_output}"
+            )
 
+
+def get_Aria2c_Name(link):
+    if len(BOT.Options.custom_name) != 0:
+        return BOT.Options.custom_name
+    cmd = f'aria2c -x10 --dry-run --file-allocation=none "{link}"'
+    result = subprocess.run(cmd, stdout=subprocess.PIPE, shell=True)
+    stdout_str = result.stdout.decode("utf-8")
+    filename = stdout_str.split("complete: ")[-1].split("\n")[0]
+    name = filename.split("/")[-1]
+    if len(name) == 0:
+        name = "UNKNOWN DOWNLOAD NAME"
+    return name
+
+
+async def on_output(output: str):
+    global link_info
+    total_size = "0B"
+    progress_percentage = "0B"
+    downloaded_bytes = "0B"
+    eta = "0S"
     try:
-        download = (await sync_to_async(aria2.add, listener.link, a2c_opt))[0]
-    except Exception as e:
-        LOGGER.info(f"Aria2c Download Error: {e}")
-        await listener.onDownloadError(f"{e}")
-        return
-    if await aiopath.exists(listener.link):
-        await remove(listener.link)
-    if download.error_message:
-        error = str(download.error_message).replace("<", " ").replace(">", " ")
-        LOGGER.info(f"Aria2c Download Error: {error}")
-        await listener.onDownloadError(error)
-        return
+        if "ETA:" in output:
+            parts = output.split()
+            total_size = parts[1].split("/")[1]
+            total_size = total_size.split("(")[0]
+            progress_percentage = parts[1][parts[1].find("(") + 1 : parts[1].find(")")]
+            downloaded_bytes = parts[1].split("/")[0]
+            eta = parts[4].split(":")[1][:-1]
+    except Exception as do:
+        logging.error(f"Could't Get Info Due to: {do}")
 
-    gid = download.gid
-    name = download.name
-    async with task_dict_lock:
-        task_dict[listener.mid] = Aria2Status(listener, gid, queued=add_to_queue)
-    if add_to_queue:
-        LOGGER.info(f"Added to Queue/Download: {name}. Gid: {gid}")
-        if (not listener.select or not download.is_torrent) and listener.multi <= 1:
-            await sendStatusMessage(listener.message)
+    percentage = re.findall("\d+\.\d+|\d+", progress_percentage)[0]  # type: ignore
+    down = re.findall("\d+\.\d+|\d+", downloaded_bytes)[0]  # type: ignore
+    down_unit = re.findall("[a-zA-Z]+", downloaded_bytes)[0]
+    if "G" in down_unit:
+        spd = 3
+    elif "M" in down_unit:
+        spd = 2
+    elif "K" in down_unit:
+        spd = 1
     else:
-        LOGGER.info(f"Aria2Download started: {name}. Gid: {gid}")
+        spd = 0
 
-    await listener.onDownloadStart()
+    elapsed_time_seconds = (datetime.now() - BotTimes.task_start).seconds
 
-    if (
-        not add_to_queue
-        and (not listener.select or not config_dict["BASE_URL"])
-        and listener.multi <= 1
-    ):
-        await sendStatusMessage(listener.message)
-    elif listener.select and download.is_torrent and not download.is_metadata:
-        if not add_to_queue:
-            await sync_to_async(aria2.client.force_pause, gid)
-        SBUTTONS = bt_selection_buttons(gid)
-        msg = "Your download paused. Choose files then press Done Selecting button to start downloading."
-        await sendMessage(listener.message, msg, SBUTTONS)
+    if elapsed_time_seconds >= 270 and not Aria2c.link_info:
+        logging.error("Failed to get download information ! Probably dead link 💀")
+    # Only Do this if got Information
+    if total_size != "0B":
+        # Calculate download speed
+        Aria2c.link_info = True
+        current_speed = (float(down) * 1024**spd) / elapsed_time_seconds
+        speed_string = f"{sizeUnit(current_speed)}/s"
 
-    if add_to_queue:
-        await event.wait()
-        if listener.isCancelled:
-            return
-        async with queue_dict_lock:
-            non_queued_dl.add(listener.mid)
-        async with task_dict_lock:
-            task = task_dict[listener.mid]
-            task.queued = False
-            await sync_to_async(task.update)
-            new_gid = task.gid()
-
-        await sync_to_async(aria2.client.unpause, new_gid)
-        LOGGER.info(f"Start Queued Download from Aria2c: {name}. Gid: {gid}")
+        await status_bar(
+            Messages.status_head,
+            speed_string,
+            int(percentage),
+            eta,
+            downloaded_bytes,
+            total_size,
+            "Aria2c 🧨",
+        )
