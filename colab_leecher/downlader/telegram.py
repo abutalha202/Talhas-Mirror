@@ -64,5 +64,6 @@ async def TelegramDownload(link, num):
     start_time = datetime.now()
     file_path = ospath.join(Paths.down_path, name)
     
-    await message.download(progress=download_progress, in_memory=False, file_name=file_path) # type: ignore
+    await message.download(progress=download_progress, in_memory=False, file_name=file_path, chunk_size=1000) # type: ignore
     Transfer.down_bytes.append(media.file_size)
+    
