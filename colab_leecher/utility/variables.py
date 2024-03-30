@@ -67,7 +67,7 @@ class BotTimes:
 
 class Paths:
     WORK_PATH = "/content/Talhas-MIRROR/BOT_WORK"
-    THMB_PATH = "/content/Talhas-MIRROR/colab_leecher/Thumbnail.jpg"
+    THMB_PATH = "/content/Talhas-MIRROR/colab_leecher/Thumbnail.gif"
     VIDEO_FRAME = f"{WORK_PATH}/video_frame.jpg"
     HERO_IMAGE = f"{WORK_PATH}/Hero.jpg"
     DEFAULT_HERO =  "/content/Talhas-MIRROR/custom_thmb.jpg"
@@ -100,7 +100,7 @@ class MSG:
 
 class Aria2c:
     link_info = False
-    pic_dwn_url = "https://d1qde0807mi10y.cloudfront.net/s24m0w%2Fpreview%2F56921116%2Fmain_large.gif?response-content-disposition=inline%3Bfilename%3D"main_large.gif"%3B&response-content-type=image%2Fgif&Expires=1711836963&Signature=ekNuDmkyFtA-g8N5TOwFEZfRW2ddqxi3GCC1xTtbZ7UgIhfYQpJQvFKi~16zUKsGO1ieRhXhU6rJ-6Bje9XFdjBw4K8fp-RTH8CdY9Pk3jS9qxedm-52OuYLiGzoyv~2yJ2TLj69WjXT2NVtKydCkmdX-BF1X6x6-DKGlE~JElq7DKDamZNsaVkEGAzfCB25gXPv4pKJt-80SHljvEsgyHqEYjbKIEWyESEP-lE8tfCJQrKFFo9E7poJVY2URidD0IAPpcY4AGHmWsW8H5gYHfg~BYFWBWv4GVKyQY-YDCxRaFJOpU-yndNe0DReodh08uSpNbKRxOs~AP5l0Q0P3A__&Key-Pair-Id=APKAJT5WQLLEOADKLHBQ"
+    pic_dwn_url = "https://s12.gifyu.com/images/SV6Xe.md.gif"
 
 
 class Gdrive:
