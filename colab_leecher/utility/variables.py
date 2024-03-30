@@ -69,7 +69,7 @@ class Paths:
     WORK_PATH = "/content/Talhas-MIRROR/BOT_WORK"
     THMB_PATH = "/content/Talhas-MIRROR/colab_leecher/Thumbnail.gif"
     VIDEO_FRAME = f"{WORK_PATH}/video_frame.gif"
-    HERO_IMAGE = f"{WORK_PATH}/Hero.gif"
+    HERO_IMAGE = f"{WORK_PATH}/Hero.jpg"
     DEFAULT_HERO =  "/content/Talhas-MIRROR/custom_thmb.gif"
     MOUNTED_DRIVE = "/content/drive"
     down_path = f"{WORK_PATH}/Downloads"
