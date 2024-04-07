@@ -254,13 +254,17 @@ async def splitArchive(file_path, max_size):
     BotTimes.task_start = datetime.now()
 
     with open(file_path, "rb") as f:
-        chunk = f.read(max_size)
         i = 1
         bytes_written = 0
-        while chunk:
+        while True:
             # Generate filename for this chunk
             ext = str(i).zfill(3)
             output_filename = "{}.{}".format(new_path, ext)
+
+            # Read a chunk of max_size bytes
+            chunk = f.read(max_size)
+            if not chunk:
+                break  # Exit the loop if no more data to read
 
             # Write chunk to file
             with open(output_filename, "wb") as out:
@@ -280,12 +284,8 @@ async def splitArchive(file_path, max_size):
                 "Xr-Split ✂️",
             )
 
-            if i == 1:  # Split into 2 parts
-                break  # Break after splitting into 2 parts
-
-            # Get next chunk
-            chunk = f.read(max_size)
             i += 1  # Increment chunk counter
 
     Messages.download_name = filename
+
             
