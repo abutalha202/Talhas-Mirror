@@ -6,11 +6,11 @@ r/ && python3 -m colab_leecher #type:ignore
 
 # @markdown <br>
 
-API_ID = 24751645  # @param {type: "integer"}
-API_HASH = "f1f4da61b5085a41ba07e17aa7c47636"  # @param {type: "string"}
-BOT_TOKEN = "7093659458:AAFU8-QWL4ZuonXCyWj1dxQbpwWOmeowEL0"  # @param {type: "string"}
-USER_ID = 5859811472  # @param {type: "integer"}
-DUMP_ID = -1002125452871  # @param {type: "integer"}
+API_ID = 0  # @param {type: "integer"}
+API_HASH = ""  # @param {type: "string"}
+BOT_TOKEN = ""  # @param {type: "string"}
+USER_ID = 0  # @param {type: "integer"}
+DUMP_ID = 0  # @param {type: "integer"}
 
 
 import subprocess, time, json, shutil, os
